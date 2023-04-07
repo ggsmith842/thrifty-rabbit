@@ -1,5 +1,8 @@
 # thrifty-rabbit
 
+![Logo](https://github.com/ggsmith842/thrifty-rabbit/blob/main/thirfyRabbit.jpg?raw=true)
+
+
 ### Goals:
 1. Monitor a dividend-focused portfolio for performance and health.
 2. Create an optimized portfolio by creating a robo-advisor with an objective of maximizing long-term returns 
@@ -20,4 +23,16 @@ How will this be done?
     - a company stops paying a dividend
     - a dividend yield has steadily descrased for 2 quarters
     - a company is low on cash
-4. 
+4. Develop a portfolio health score and thresholds using the rules and metrics established above
+5. Visualize and report results
+6. Automate reporting and data refreshes.
+
+#### 2. Automate and Optimize
+
+(Coming soon)
+
+
+
+### Data Model
+
+(Coming soon)
