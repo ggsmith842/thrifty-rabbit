@@ -1,3 +1,4 @@
+#!/usr/bin/env python # 
 import pandas as pd
 import matplotlib.pyplot as plt
 from pypfopt.efficient_frontier import EfficientFrontier
@@ -31,12 +32,17 @@ class Portfolio:
     
 
     def print_portfolio(self):
+        
+        #portfolio metadata
         print(f'Portfolio Name: {self.name}\nRisk bucket: {str(self.riskBucket)}\nExpected Return: {self.expectedReturn:.2%}')
-        print(f'Allocations:\n')
+        
+        #portfolio allocation
+        print(f'\nAllocations:')
         for allocation in self.allocations:
             print(f"Asset: {allocation.ticker}; Percent of Portfolio: {allocation.percentage:.2%}")
-        
-        print("Expected Performance\n", self.ef.portfolio_performance(verbose=True))
+        #expected performance
+        print("\nExpected Performance:")
+        self.ef.portfolio_performance(verbose=True)
         
 
     def get_class_alloc(self):
@@ -107,6 +113,33 @@ class Portfolio:
 
 
 
+class Evaluator:
+    def __init__(self, ticker):
+        self.ticker = ticker
+        import yfinance as yf   
+        import pandas as pd   
+        data = yf.download(ticker,period='10y')
+        data = pd.DataFrame(data['Close'])
+
+        self.data = data
+
+    def data(self):
+        return self.data
+    
+    def expected(self):
+        from pypfopt.efficient_frontier import EfficientFrontier
+        from pypfopt import risk_models
+        from pypfopt import expected_returns
+        df = self.data
+        mu = expected_returns.mean_historical_return(df)
+        S = risk_models.sample_cov(df)
+        ef = EfficientFrontier(mu, S)
+
+        return mu, S, ef
+
+
+
+    
 
 
             
