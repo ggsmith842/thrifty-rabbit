@@ -72,7 +72,8 @@ class RiskQuestionnaire:
                         answer.score * question.weight)
                     print(answer.answerText + ": " + str(
                         answer.score * question.weight))
-            print("Total Risk Score: " + str(myTotalScore) + "\n")
+        print("Total Risk Score: " + str(myTotalScore) + "\n")
+        self.score = myTotalScore
 
 
 

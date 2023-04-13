@@ -6,7 +6,7 @@ from pypfopt.efficient_frontier import EfficientFrontier
 
 #portfolio class
 class Portfolio:
-    def __init__(self, name, tickers:str, riskBucket, expectedReturn = 0, expectedRisk=0):
+    def __init__(self, name, tickers:str, riskBucket, expectedReturn = 0.0, expectedRisk=0):
         self.name = name
         self.riskBucket = riskBucket
         self.allocations = []
@@ -110,6 +110,17 @@ class Portfolio:
         ax.legend()
         plt.tight_layout()
         plt.show()
+   
+    @staticmethod
+    def getPortfolioMapping(riskToleranceScore, riskCapacityScore):
+        import pandas as pd
+        allocationLookupTable=pd.read_csv('../Data/riskbuckets.csv')
+        matchTol = (allocationLookupTable['ToleranceMin'] <=  riskToleranceScore) & (allocationLookupTable['ToleranceMax'] >=  riskToleranceScore)
+        matchCap = (allocationLookupTable['CapacityMin'] <=  riskCapacityScore) & (allocationLookupTable['CapacityMax'] >=  riskCapacityScore)
+        portfolioID = allocationLookupTable['Portfolio'][(matchTol & matchCap)]
+        return portfolioID.values[0]
+
+
 
 
 
@@ -136,11 +147,6 @@ class Evaluator:
         ef = EfficientFrontier(mu, S)
 
         return mu, S, ef
-
-
-
-    
-
 
             
 #allocation
