@@ -2,49 +2,57 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from pypfopt.efficient_frontier import EfficientFrontier
+import yfinance as yf
 
 
-#portfolio class
+class Allocation:
+    def __init__(self, ticker, percentage):
+        self.ticker = ticker
+        self.percentage = percentage
+    
 class Portfolio:
-    def __init__(self, name, tickers:str, riskBucket, expectedReturn = 0.0, expectedRisk=0):
-        self.name = name
+    def __init__(self, tickerString: str, expectedReturn: float, portfolioName: str, riskBucket: int):
+
+        self.name = portfolioName
         self.riskBucket = riskBucket
-        self.allocations = []
         self.expectedReturn = expectedReturn
-        self.tickers = tickers
-  
+        self.allocations = []
+
         from pypfopt.efficient_frontier import EfficientFrontier
         from pypfopt import risk_models
         from pypfopt import expected_returns
-        df = self.__get_closing_prices(tickers)
+
+        df = self.__getDailyPrices(tickerString, "20y")
+
         mu = expected_returns.mean_historical_return(df)
         S = risk_models.sample_cov(df)
+
         ef = EfficientFrontier(mu, S)
+
         ef.efficient_return(expectedReturn)
-        portfolioWeights = ef.clean_weights() 
+        self.expectedRisk = ef.portfolio_performance()[1]
+        portfolioWeights = ef.clean_weights()
+
         for key, value in portfolioWeights.items():
-            newAllocation = Allocation(key,value)
-            self.allocations.append(newAllocation)  
+            newAllocation = Allocation(key, value)
+            self.allocations.append(newAllocation)
 
-        self.mu = mu
-        self.S = S
-        self.ef = ef
+    def __getDailyPrices(self, tickerStringList, period):
+        data = yf.download(tickerStringList, group_by="Ticker", period=period)
+        data = data.iloc[:, data.columns.get_level_values(1)=="Close"]
+        data = data.dropna()
+        data.columns = data.columns.droplevel(1)
+        return data
     
-
-    def print_portfolio(self):
-        
-        #portfolio metadata
-        print(f'Portfolio Name: {self.name}\nRisk bucket: {str(self.riskBucket)}\nExpected Return: {self.expectedReturn:.2%}')
-        
-        #portfolio allocation
-        print(f'\nAllocations:')
-        for allocation in self.allocations:
-            print(f"Asset: {allocation.ticker}; Percent of Portfolio: {allocation.percentage:.2%}")
-        #expected performance
-        print("\nExpected Performance:")
-        self.ef.portfolio_performance(verbose=True)
-        
-
+    @staticmethod
+    def getPortfolioMapping(riskToleranceScore, riskCapacityScore):
+        import pandas as pd
+        allocationLookupTable=pd.read_csv('../Data/riskbuckets.csv')
+        matchTol = (allocationLookupTable['ToleranceMin'] <=  riskToleranceScore) & (allocationLookupTable['ToleranceMax'] >=  riskToleranceScore)
+        matchCap = (allocationLookupTable['CapacityMin'] <=  riskCapacityScore) & (allocationLookupTable['CapacityMax'] >=  riskCapacityScore)
+        portfolioID = allocationLookupTable['Portfolio'][(matchTol & matchCap)]
+        return portfolioID.values[0]
+    
     def get_class_alloc(self):
         asset_class_weights = []
         asset_class_labels = []
@@ -70,16 +78,6 @@ class Portfolio:
         
         return df
     
-    def __get_closing_prices(self,tickers,period="20y"):
-        import yfinance as yf
-       
-        data = yf.download(tickers, group_by="Ticker" ,period=period)
-
-        data = data.iloc[:,data.columns.get_level_values(1)=="Close"]
-        data.dropna(inplace=True)
-        data.columns = data.columns.droplevel(1)
-
-        return data
     
     def show_efficient_frontier(self):
         import numpy as np
@@ -106,22 +104,10 @@ class Portfolio:
         returnP = str(int(self.expectedReturn*100))+"%"
         ax.scatter(std_tangent2, ret_tangent2, marker="*", s=100,
             c="y", label=returnP)
-        ax.set_title("Efficient Frontier for " + returnP +           " returns")
+        ax.set_title(f"Efficient Frontier for {returnP} returns")
         ax.legend()
         plt.tight_layout()
         plt.show()
-   
-    @staticmethod
-    def getPortfolioMapping(riskToleranceScore, riskCapacityScore):
-        import pandas as pd
-        allocationLookupTable=pd.read_csv('../Data/riskbuckets.csv')
-        matchTol = (allocationLookupTable['ToleranceMin'] <=  riskToleranceScore) & (allocationLookupTable['ToleranceMax'] >=  riskToleranceScore)
-        matchCap = (allocationLookupTable['CapacityMin'] <=  riskCapacityScore) & (allocationLookupTable['CapacityMax'] >=  riskCapacityScore)
-        portfolioID = allocationLookupTable['Portfolio'][(matchTol & matchCap)]
-        return portfolioID.values[0]
-
-
-
 
 
 class Evaluator:
@@ -149,12 +135,3 @@ class Evaluator:
         return mu, S, ef
 
             
-#allocation
-class Allocation:
-    '''
-    An allocation is an asset such as a stock or bond
-    '''
-    def __init__(self,ticker,percentage):
-        self.ticker = ticker
-        self.percentage = percentage
-
