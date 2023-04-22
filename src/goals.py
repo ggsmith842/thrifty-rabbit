@@ -1,5 +1,6 @@
 #!/usr/bin/env python # 
 from datetime import date
+import pandas as pd
 
 class Goal:
   def __init__(self, name, targetYear, targetValue, initialContribution=0, monthlyContribution=0, priority=""):
@@ -21,7 +22,7 @@ class Goal:
     minProb = lookupTable['MinP'][(match)]
     maxProb = lookupTable['MaxP'][(match)]
     return minProb.values[0], maxProb.values[0]
-
+    
 class RetirementGoal(Goal):
     def __init__(self, name, targetValue, startingAge, retirementAge):
         targetYear = date.today().year + (retirementAge-startingAge)
