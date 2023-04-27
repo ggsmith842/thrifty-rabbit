@@ -4,14 +4,14 @@
 
 
 ### Goals:
-1. Monitor a dividend-focused portfolio for performance and health.
-2. Create an optimized portfolio by creating a robo-advisor with an objective of maximizing long-term returns 
+1. Monitor a portfolio for performance and health.
+2. Optimize a portfolio by creating a robo-advisor with an objective of maximizing long-term returns.
 
 #### 1. Monitoring
 
 How will this be done?
 
-1. For a given portfolio collect the fundamentals. This is done with the Alpha Vantage API
+1. Collect fundamental data for assets in the portfolio using the [yfinance](https://pypi.org/project/yfinance/) package.
 2. Calculate metrics used to evaluate a stock for a dividend portfolio
     - Yield (%)
     - Dividend Payout Ratio
@@ -28,6 +28,8 @@ How will this be done?
 6. Automate reporting and data refreshes.
 
 #### 2. Automate and Optimize
+
+1. Using [pyportfolioopt](https://pypi.org/project/pyportfolioopt/)
 
 (Coming soon)
 
