@@ -24,10 +24,10 @@ class Portfolio:
 
         df = self.__getDailyPrices(tickerString, "20y")
 
-        mu = expected_returns.mean_historical_return(df)
-        S = risk_models.sample_cov(df)
+        self.mu = expected_returns.mean_historical_return(df)
+        self.S = risk_models.sample_cov(df)
 
-        ef = EfficientFrontier(mu, S)
+        ef = EfficientFrontier(self.mu, self.S)
 
         ef.efficient_return(expectedReturn)
         self.expectedRisk = ef.portfolio_performance()[1]
@@ -54,6 +54,10 @@ class Portfolio:
         return portfolioID.values[0]
     
     def get_class_alloc(self):
+        '''
+        Returns a dataframe with the asset 
+        and its optimal weight in the portfolio
+        '''
         asset_class_weights = []
         asset_class_labels = []
         
