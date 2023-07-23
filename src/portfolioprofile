@@ -1,9 +1,0 @@
-#!/usr/bin/env python # 
-
-class Profiler:
-    
-    def __init__(self, assetList):
-        from yahooquery import Ticker
-        self.assetList = assetList
-        ticker = Ticker(assetList)
-        sectors = {}
