@@ -1,3 +1,6 @@
+'''
+Provides classes for building an investment portfolio
+'''
 #!/usr/bin/env python
 import matplotlib.pyplot as plt
 
