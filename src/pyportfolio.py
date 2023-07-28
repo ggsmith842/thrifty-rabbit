@@ -27,11 +27,11 @@ class Portfolio:
         self.mu = expected_returns.mean_historical_return(df)
         self.S = risk_models.sample_cov(df)
 
-        ef = EfficientFrontier(self.mu, self.S)
+        self.ef = EfficientFrontier(self.mu, self.S)
 
-        ef.efficient_return(expectedReturn)
-        self.expectedRisk = ef.portfolio_performance()[1]
-        portfolioWeights = ef.clean_weights()
+        self.ef.efficient_return(expectedReturn)
+        self.expectedRisk = self.ef.portfolio_performance()[1]
+        portfolioWeights = self.ef.clean_weights()
 
         for key, value in portfolioWeights.items():
             newAllocation = Allocation(key, value)
