@@ -1,6 +1,8 @@
 """
 Utility module to load data into a sqlite3 database
 """
+
+#!/usr/bin/env python #
 import sqlite3
 import yfinance as yf
 
@@ -24,10 +26,8 @@ def data_loader(portfolio, period="10yr"):
 
     # Close connection object
     conn.close()
-    return
 
 
 if __name__ == "__main__":
-    portfolio = ["SPY WMT JNPR CVS BAC JNJ ABBNY SHEL ORCL"]
-
-    data_loader(portfolio=portfolio)
+    portfolio_string = ["SPY WMT JNPR CVS BAC JNJ ABBNY SHEL ORCL"]
+    data_loader(portfolio=portfolio_string)
