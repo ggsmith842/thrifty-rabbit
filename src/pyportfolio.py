@@ -12,6 +12,7 @@ from pypfopt import expected_returns, risk_models
 from pypfopt.efficient_frontier import EfficientFrontier
 
 import numpy as np
+from correlation import findcorr
 
 
 class Allocation:
@@ -42,12 +43,12 @@ class Portfolio:
         self.expected_return = expected_return
         self.allocations = []
 
-        price_df = self.__get_daily_prices(ticker_string, "20y")
+        self.price_df = self.__get_daily_prices(ticker_string, "20y")
 
-        self.mu = expected_returns.mean_historical_return(price_df)
-        self.S = risk_models.sample_cov(price_df)
+        self.mu_return = expected_returns.mean_historical_return(self.price_df)
+        self.sample_covr = risk_models.sample_cov(self.price_df)
 
-        self.efficient_frontier = EfficientFrontier(self.mu, self.S)
+        self.efficient_frontier = EfficientFrontier(self.mu_return, self.sample_covr)
 
         self.efficient_frontier.efficient_return(expected_return)
         self.expected_risk = self.efficient_frontier.portfolio_performance()[1]
@@ -133,10 +134,10 @@ class Portfolio:
         Returns:
             None
         """
-        efficient_frontier = EfficientFrontier(self.mu, self.S)
+        efficient_frontier = EfficientFrontier(self.mu_return, self.sample_covr)
         _, ax = plt.subplots()
-        ef_max_sharpe = EfficientFrontier(self.mu, self.S)
-        ef_return = EfficientFrontier(self.mu, self.S)
+        ef_max_sharpe = EfficientFrontier(self.mu_return, self.sample_covr)
+        ef_return = EfficientFrontier(self.mu_return, self.sample_covr)
         plotting.plot_efficient_frontier(efficient_frontier, ax=ax, show_assets=False)
         n_samples = 10000
         weights = np.random.dirichlet(np.ones(efficient_frontier.n_assets), n_samples)
@@ -157,3 +158,17 @@ class Portfolio:
         ax.legend()
         plt.tight_layout()
         plt.show()
+    
+    def correlation_report(self):
+        """
+        Finds the weighed correlation of assets
+        in a portfolio.
+
+        Args:
+            price_data (DataFrame): A DataFrame of asset prices.
+
+        Returns:
+            None.
+
+        """
+        return findcorr(price_data=self.price_df)

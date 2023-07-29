@@ -8,7 +8,7 @@ from datetime import date
 import pandas as pd
 
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
+from matplotlib import ticker
 
 
 class Projection:
@@ -86,7 +86,6 @@ class Projection:
 
         scale_y = 1e6
         ticks_y = ticker.FuncFormatter(lambda x, pos: f"{x / scale_y:g}")
-        # ticks_y = ticker.FuncFormatter(lambda x, pos: "{0:g}".format(x / scale_y))
         fig, ax = plt.subplots()
         ax.yaxis.set_major_formatter(ticks_y)
         ax.set_ylabel("Millions (USD)")
