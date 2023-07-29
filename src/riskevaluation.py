@@ -1,86 +1,124 @@
-#!/usr/bin/env python # 
+"""
+This module creates the risk questionnaire for onboarding 
+and evaluating clients.
+"""
+
+#!/usr/bin/env python #
+
+import pandas as pd
+
 
 class RiskQuestion:
-    def __init__(self, questionText, weight=1):
-        self.questionText = questionText
+    """
+    A question about risk posed to a client.
+    """
+
+    def __init__(self, question_text, weight=1):
+        self.question_text = question_text
         self.weight = weight
         self.answers = []
 
+
+
 class RiskQuestionAnswer:
-    def __init__(self, answerText, score, selected = False):
-        self.answerText = answerText
+    """
+    A client answer to a question regarding risk
+    """
+
+    def __init__(self, answer_text, score, selected=False):
+        self.answer_text = answer_text
         self.score = score
         self.selected = selected
 
+
 class RiskQuestionnaire:
+    """
+    Questionairre of risk based questions posed to a client or user.
+    """
+
     def __init__(self):
-        self.questions = []                  
+        self.questions = []
+        self.score = 0
 
-    def loadQuestionnaire(self, riskQuestionsFileName, riskAnswersFileName, type):
-        if not (type in ["Tolerance", "Capacity"]):
-                raise ValueError('Type must be Tolerance or Capacity.')
-        import pandas as pd
-        riskQuestions = pd.read_csv(
-            riskQuestionsFileName).reset_index()
-        riskAnswers = pd.read_csv(
-            riskAnswersFileName).reset_index()
-        if (type == "Tolerance"):
-            toleranceQuestions = riskQuestions[(riskQuestions['QuestionType'] == 'Tolerance')].reset_index()
-            for index, row in toleranceQuestions.iterrows():
+    def load_questionnaire(
+        self, risk_questions_file_name, risk_answers_file_name, question_type
+    ):
+        """
+        Loads the questionnaire for the user
+        """
+        if not (question_type in ["Tolerance", "Capacity"]):
+            raise ValueError("Type must be Tolerance or Capacity.")
+
+        risk_questions = pd.read_csv(risk_questions_file_name).reset_index()
+        risk_answers = pd.read_csv(risk_answers_file_name).reset_index()
+        if question_type == "Tolerance":
+            tolerance_questions = risk_questions[
+                (risk_questions["QuestionType"] == "Tolerance")
+            ].reset_index()
+            for index, row in tolerance_questions.iterrows():
                 self.questions.append(
-                    RiskQuestion(row['QuestionText'],
-                                row['QuestionWeight']))
-                answers = riskAnswers[(riskAnswers['QuestionID'] ==
-                    row['QuestionID'])]
-                for indexA, rowA in answers.iterrows():
+                    RiskQuestion(row["QuestionText"], row["QuestionWeight"])
+                )
+                answers = risk_answers[
+                    (risk_answers["QuestionID"] == row["QuestionID"])
+                ]
+                for _, row_a in answers.iterrows():
                     self.questions[index].answers.append(
-                        RiskQuestionAnswer(rowA['AnswerText'],
-                                            rowA['AnswerValue']))
-        else:
-            capacityQuestions = riskQuestions[(riskQuestions['QuestionType'] == 'Capacity')].reset_index()
-            for index, row in capacityQuestions.iterrows():
-                self.questions.append(
-                        RiskQuestion(row['QuestionText'],
-                                    row['QuestionWeight']))
-                answers = riskAnswers[(
-                    riskAnswers['QuestionID'] == row['QuestionID'])]
-                for indexA, rowA in answers.iterrows():
-                    self.questions[index].answers.append(
-                        RiskQuestionAnswer(rowA['AnswerText'],
-                                            rowA['AnswerValue']))
+                        RiskQuestionAnswer(row_a["AnswerText"], row_a["AnswerValue"])
+                    )
                     
+        else:
+            capacity_questions = risk_questions[
+                (risk_questions["QuestionType"] == "Capacity")
+            ].reset_index()
+            for index, row in capacity_questions.iterrows():
+                self.questions.append(
+                    RiskQuestion(row["QuestionText"], row["QuestionWeight"])
+                )
+                answers = risk_answers[
+                    (risk_answers["QuestionID"] == row["QuestionID"])
+                ]
+                for _, row_a in answers.iterrows():
+                    self.questions[index].answers.append(
+                        RiskQuestionAnswer(row_a["AnswerText"], row_a["AnswerValue"])
+                    )
 
+    def answer_questionnaire(self):
+        """
+        Function called to loop through questions and record answers from users.
+        """
 
-    def answerQuestionnaire(self):
-        for i in range(len(self.questions)):
-            question = self.questions[i]
-            print(question.questionText)
-            for n in range(len(question.answers)):
-                answer = question.answers[n]
-                print(str(n) + ":" + answer.answerText)
-            nChosen = int(input("Pick a answer between 0 and " + str(len(question.answers)-1)+":"))
-            self.questions[i].answers[nChosen].selected = True
+        # for i in range(len(self.questions)):
+        #     question = self.questions[i]
+        #     print(question.question_text)
+        #     for j in range(len(question.answers)):
+        #         answer = question.answers[j]
+        #         print(str(j) + ":" + answer.answer_text)
+        #     n_chosen = int(input("Pick a answer between 0 and " + str(len(question.answers)-1)+":"))
+        #     self.questions[i].answers[n_chosen].selected = True
+        #     print("\n")
+
+        for i, question in enumerate(self.questions):
+            print(question.question_text)
+            for j, answer in enumerate(question.answers):
+                print(f"{j}:{answer.answer_text}")
+            n_chosen = int(input(f"Pick an answer between 0 and {len(question.answers) - 1}:"))
+            self.questions[i].answers[n_chosen].selected = True
             print("\n")
 
-    def calculateScore(self):
+
+    def calculate_score(self):
+        '''
+        Compute score based on user input
+        '''
         print("Risk Score:")
-        myTotalScore = 0
+        my_total_score = 0
         for question in self.questions:
             for answer in question.answers:
-                if (answer.selected == True):
-                    myTotalScore = myTotalScore + (
-                        answer.score * question.weight)
-                    print(answer.answerText + ": " + str(
-                        answer.score * question.weight))
-        print("Total Risk Score: " + str(myTotalScore) + "\n")
-        self.score = myTotalScore
-
-
-
-
-
-
-
-
- 
-            
+                if answer.selected is True:
+                    my_total_score = my_total_score + (answer.score * question.weight)
+                    print(
+                        answer.answer_text + ": " + str(answer.score * question.weight)
+                    )
+        print("Total Risk Score: " + str(my_total_score) + "\n")
+        self.score = my_total_score
