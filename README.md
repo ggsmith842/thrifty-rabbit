@@ -33,7 +33,7 @@ The documentation for the modules can be found in the docs directory. The docume
 Contributions to this repository are welcome. To contribute, simply fork the repository and submit a pull request.
 
 ## License
-This repository is licensed under the MIT License.
+This repository is licensed under the MIT [License](https://github.com/ggsmith842/thrifty-rabbit/blob/main/LICENSE).
 ## Credits
 
 This package uses the following packages:
