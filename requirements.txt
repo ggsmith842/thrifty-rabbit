@@ -92,7 +92,7 @@ pyparsing==3.0.9
 pyportfolioopt==1.5.5
 PyQt5==5.15.7
 PyQt5-sip==12.11.0
-pyrsistent==0.18.0
+pyrsistent==
 PySocks==1.7.1
 python-dateutil==2.8.2
 python-json-logger==2.0.7

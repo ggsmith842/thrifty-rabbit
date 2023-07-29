@@ -87,17 +87,6 @@ class RiskQuestionnaire:
         """
         Function called to loop through questions and record answers from users.
         """
-
-        # for i in range(len(self.questions)):
-        #     question = self.questions[i]
-        #     print(question.question_text)
-        #     for j in range(len(question.answers)):
-        #         answer = question.answers[j]
-        #         print(str(j) + ":" + answer.answer_text)
-        #     n_chosen = int(input("Pick a answer between 0 and " + str(len(question.answers)-1)+":"))
-        #     self.questions[i].answers[n_chosen].selected = True
-        #     print("\n")
-
         for i, question in enumerate(self.questions):
             print(question.question_text)
             for j, answer in enumerate(question.answers):
