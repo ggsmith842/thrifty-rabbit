@@ -8,6 +8,27 @@ and evaluating clients.
 import pandas as pd
 
 
+class RiskEvaluation:
+    """
+    Performs the risk evaluation process and
+    returns a scores for both risk capacity and tolerance.
+    """
+
+    def __init__(self):
+        risk_file_dir = "../data/questionnaire.csv"
+        risk_ans_dir = "../data/answers.csv"
+
+        self.tolerance_evaluation = RiskQuestionnaire()
+        self.capacity_evaluation = RiskQuestionnaire()
+
+        self.tolerance_evaluation.load_questionnaire(
+            risk_file_dir, risk_ans_dir, "Tolerance"
+        )
+        self.capacity_evaluation.load_questionnaire(
+            risk_file_dir, risk_ans_dir, "Capacity"
+        )
+
+
 class RiskQuestion:
     """
     A question about risk posed to a client.
@@ -45,7 +66,7 @@ class RiskQuestionnaire:
         """
         Loads the questionnaire for the user
         """
-        if not (question_type in ["Tolerance", "Capacity"]):
+        if question_type not in ["Tolerance", "Capacity"]:
             raise ValueError("Type must be Tolerance or Capacity.")
 
         risk_questions = pd.read_csv(risk_questions_file_name).reset_index()
@@ -111,3 +132,5 @@ class RiskQuestionnaire:
                     )
         print("Total Risk Score: " + str(my_total_score) + "\n")
         self.score = my_total_score
+
+        return self.score

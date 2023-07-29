@@ -39,7 +39,7 @@ class Goal:
         '''
         if self.priority == "":
             raise ValueError("No value set for Priority.")
-        lookup_table = pd.read_csv("../Data/goalprobabilities.csv")
+        lookup_table = pd.read_csv("../data/goalprobabilities.csv")
         match = lookup_table["Realize"] == self.priority
         min_prob = lookup_table["MinP"][(match)]
         max_prob = lookup_table["MaxP"][(match)]

@@ -70,7 +70,7 @@ class Portfolio:
         """
         Maps a portfolio to a risk tolerance and capacity bucket.
         """
-        allocation_lookup_table = pd.read_csv("../Data/riskbuckets.csv")
+        allocation_lookup_table = pd.read_csv("../data/riskbuckets.csv")
         match_tol = (
             allocation_lookup_table["ToleranceMin"] <= risk_tolerance_score
         ) & (allocation_lookup_table["ToleranceMax"] >= risk_tolerance_score)
