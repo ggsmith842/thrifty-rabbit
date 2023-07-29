@@ -46,7 +46,7 @@ This package uses the following packages:
 * pypfopt: https://pypfopt.readthedocs.io/en/stable/
 
 ## References
-* [Robo-Advisor with Python: A hands-on guide to building and operating your own Robo-advisor](https://github.com/aki-ranin/robo-advisor-with-python) 
+* [Robo-Advisor with Python: A hands-on guide to building and operating your own Robo-advisor](https://github.com/PacktPublishing/Robo-Advisor-with-Python)
 * [yfinance documentation](https://pypi.org/project/yfinance/)
 * [pypfopt documentation](https://pypfopt.readthedocs.io/en/stable/)
 
