@@ -19,7 +19,6 @@ class RiskQuestion:
         self.answers = []
 
 
-
 class RiskQuestionAnswer:
     """
     A client answer to a question regarding risk
@@ -66,7 +65,7 @@ class RiskQuestionnaire:
                     self.questions[index].answers.append(
                         RiskQuestionAnswer(row_a["AnswerText"], row_a["AnswerValue"])
                     )
-                    
+
         else:
             capacity_questions = risk_questions[
                 (risk_questions["QuestionType"] == "Capacity")
@@ -91,15 +90,16 @@ class RiskQuestionnaire:
             print(question.question_text)
             for j, answer in enumerate(question.answers):
                 print(f"{j}:{answer.answer_text}")
-            n_chosen = int(input(f"Pick an answer between 0 and {len(question.answers) - 1}:"))
+            n_chosen = int(
+                input(f"Pick an answer between 0 and {len(question.answers) - 1}:")
+            )
             self.questions[i].answers[n_chosen].selected = True
             print("\n")
 
-
     def calculate_score(self):
-        '''
+        """
         Compute score based on user input
-        '''
+        """
         print("Risk Score:")
         my_total_score = 0
         for question in self.questions:
