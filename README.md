@@ -2,7 +2,9 @@
 
 [![Pylint](https://github.com/ggsmith842/thrifty-rabbit/actions/workflows/pylint.yml/badge.svg)](https://github.com/ggsmith842/thrifty-rabbit/actions/workflows/pylint.yml)
 
-![Logo](https://github.com/ggsmith842/thrifty-rabbit/blob/main/thirfyRabbit.jpg?raw=true)
+<p align="center">
+  <img src="https://github.com/ggsmith842/thrifty-rabbit/blob/main/thirfyRabbit.jpg?raw=true" alt="Thrift Rabbit logo">
+</p>
 
 # Modern Portfolio Methods in Python
 
