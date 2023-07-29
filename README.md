@@ -1,6 +1,9 @@
 # thrifty-rabbit
 
+[![Pylint](https://github.com/ggsmith842/thrifty-rabbit/actions/workflows/pylint.yml/badge.svg)](https://github.com/ggsmith842/thrifty-rabbit/actions/workflows/pylint.yml)
+
 ![Logo](https://github.com/ggsmith842/thrifty-rabbit/blob/main/thirfyRabbit.jpg?raw=true)
+
 
 
 ### Goals:
