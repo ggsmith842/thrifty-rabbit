@@ -12,19 +12,21 @@ This repository provides a set of Python modules that implement modern portfolio
 
 To install the modules, simply clone the repository and run the following command:
 
-pip install -e .
+*(coming in release 1.0)*
+pip install -e . 
 
 ## Usage
 The modules in this repository can be used as follows:
 
-To collect price data, use the get_price_data() function.
-To use goal-based advising techniques, use the goal_based_advising() function.
-To analyze a portfolio for diversification, use the portfolio_diversification() function.
-To visualize the efficient frontier of a portfolio, use the efficient_frontier() function.
-
+To build a portfolio of assets using the ```Portfolio``` class. The ```Portfolio``` class can:
+* get historical closing price data for assets 
+* analyze a portfolio for diversification, using the ```correlation_report()``` class method.
+* visualize the efficient frontier of a portfolio using the ```show_efficient_frontier()``` class method.
+  
+To use goal-based advising techniques, using the  goals and riskevaluation modules.
 
 ## Examples
-The repository includes a number of examples that demonstrate how to use the modules. The examples can be found in the examples directory.
+The repository includes a number of examples in Jupyter notebooks that demonstrate how to use the modules. The examples can be found in the examples directory.
 
 ## Documentation
 The documentation for the modules can be found in the docs directory. The documentation includes detailed descriptions of the functions and classes in the modules.
