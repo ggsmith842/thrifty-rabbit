@@ -16,7 +16,7 @@ import sqlite3
 import yfinance as yf
 
 
-def data_loader(portfolio, period="5y", tosqlite=False):
+def data_loader(portfolio, period="5y", tosqlite=False, database_name="sqlite.db"):
     """
     Helper function to load pricing data into
     a sqllite3 database.
@@ -26,6 +26,7 @@ def data_loader(portfolio, period="5y", tosqlite=False):
         period (str, optional): The period of time for the pricing data. Defaults to "10y". 
         period values: “1d”, “5d”, “1mo”, “3mo”, “6mo”, “1y”, “2y”, “5y”, “10y”, “ytd”, “max”
         tosqlite (bool, optional): Load the data into a sqlite3 database. Defaults to False.
+        database_name (string, optional): If tosqlite True, provide a name with .db at the end.
 
     Returns:
         DataFrame: The pricing data for the portfolio only if tosqlite is False.
@@ -39,18 +40,19 @@ def data_loader(portfolio, period="5y", tosqlite=False):
     if tosqlite:
         # Create sqlite database connection object
         try:
-            conn = sqlite3.connect("advisor_db.db")
+            conn = sqlite3.connect(database_name)
         except sqlite3.OperationalError:
-            conn = sqlite3.connect("advisor_db.db")
-            conn.execute("CREATE TABLE prices (date DATE, ticker TEXT, close FLOAT)")
+            conn = sqlite3.connect(database_name)
+            conn.execute("CREATE TABLE prices (date DATE, symbol TEXT, close FLOAT)")
 
         # Write dataframe to a table in sqlite database
+        data = data.reset_index()
         data.to_sql("prices", conn, if_exists="replace", index=False)
 
         # Close connection object
         conn.close()
     else:
-        return data.reset_index()
+        return data
 
 
 if __name__ == "__main__":

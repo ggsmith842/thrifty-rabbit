@@ -158,7 +158,7 @@ class Portfolio:
         ax.legend()
         plt.tight_layout()
         plt.show()
-    
+
     def correlation_report(self):
         """
         Finds the weighed correlation of assets
