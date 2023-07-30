@@ -23,7 +23,7 @@ def data_loader(portfolio, period="5y", tosqlite=False, database_name="sqlite.db
 
     Args:
         portfolio (list): A list of ticker symbols.
-        period (str, optional): The period of time for the pricing data. Defaults to "10y". 
+        period (str, optional): The period of time for the pricing data. Defaults to "10y".
         period values: “1d”, “5d”, “1mo”, “3mo”, “6mo”, “1y”, “2y”, “5y”, “10y”, “ytd”, “max”
         tosqlite (bool, optional): Load the data into a sqlite3 database. Defaults to False.
         database_name (string, optional): If tosqlite True, provide a name with .db at the end.
@@ -32,10 +32,13 @@ def data_loader(portfolio, period="5y", tosqlite=False, database_name="sqlite.db
         DataFrame: The pricing data for the portfolio only if tosqlite is False.
     """
 
-    data = yf.download(portfolio, group_by="Ticker", period=period)
-    data = data.iloc[:, data.columns.get_level_values(1) == "Close"]
-    data = data.dropna()
-    data.columns = data.columns.droplevel(1)
+    closing_prices = yf.download(tickers=portfolio, period=period)["Close"]
+    data = (
+        closing_prices
+        .reset_index()
+        .melt(id_vars=["Date"], var_name="Symbol")
+        .rename(columns={"Date": "date", "Symbol": "symbol", "value": "close"})
+    )
 
     if tosqlite:
         # Create sqlite database connection object
@@ -46,7 +49,6 @@ def data_loader(portfolio, period="5y", tosqlite=False, database_name="sqlite.db
             conn.execute("CREATE TABLE prices (date DATE, symbol TEXT, close FLOAT)")
 
         # Write dataframe to a table in sqlite database
-        data = data.reset_index()
         data.to_sql("prices", conn, if_exists="replace", index=False)
 
         # Close connection object
